@@ -42,7 +42,7 @@ add_action( 'init', 'give_register_block_type' );
  */
 function give_register_block_type() {
 
-    register_block_type('donation-form-block/give-block', array(
+    register_block_type('give/donation-form-block', array(
             'render_callback' => 'give_donation_form_block_render',
             'attributes' => array(
                 'id' => array(
@@ -58,7 +58,7 @@ function give_register_block_type() {
  * @param $attributes
  * @return string
  */
-function give_donation_form_block_render( $attributes ){
+function give_donation_form_block_render( $attributes ) {
     $form_id = $attributes[ 'id' ];
     return do_shortcode('[give_form id='.$form_id.']');
 }
