@@ -13,9 +13,6 @@ registerBlockType( 'give/donation-form-block', {
     attributes: {
        id: {
            type: 'number'
-       },
-       title: {
-           type: 'string'
        }
     },
 
@@ -25,7 +22,7 @@ registerBlockType( 'give/donation-form-block', {
 
         if (!attributes.id && !attributes.forms) {
 
-            window.fetch( wpApiSettings.schema.url + '/give-api/forms/?key=fbfd55270e2bdb393abec254fd4cd873&token=6aa9c6a36fc2027f69640296b64a1414' ).then(
+            window.fetch( `${wpApiSettings.schema.url}/give-api/forms/?key=${giveBlocksVars.key}&token=${giveBlocksVars.token}` ).then(
                 (response) => {
                     response.json().then(  ( reply ) => {
                         props.setAttributes( { forms : reply.forms } );
@@ -35,14 +32,30 @@ registerBlockType( 'give/donation-form-block', {
 
             return "loading !";
         }
-        if (!attributes.form_id && attributes.forms.length === 0) {
+
+        if (!attributes.id && attributes.forms.length === 0) {
             return "No forms";
         }
-        const onSelectChange = event => {
-            props.setAttributes({id: event.target.value});
+
+        const setForm = id => {
+
+            window.fetch( `${wpApiSettings.schema.url}/wp-json/give-api/v1/form/${id}` ).then(
+                (response) => {
+                    response.json().then(  ( reply ) => {
+                        props.setAttributes( { form : reply } );
+                    } );
+                }
+            );
         };
 
-        if (!attributes.form_id) {
+        const onSelectChange = event => {
+            props.setAttributes({id: event.target.value});
+            setForm(event.target.value);
+        };
+
+
+        if (!attributes.id) {
+
             return (
                 <div>
                     <select onChange={onSelectChange}>
@@ -58,9 +71,14 @@ registerBlockType( 'give/donation-form-block', {
             );
         }
 
+        if ( !attributes.form ) {
+            setForm(attributes.id);
+            return "loading !";
+        }
+
         return (
             <div id={ `give-form-${attributes.id}`}>
-                <h1>{attributes.title}</h1>
+                <h2 class="give-form-title">{attributes.form.title}</h2>
             </div>
         );
     },
