@@ -1,8 +1,10 @@
 const { __ } = wp.i18n;
 const {
-    registerBlockType
+    registerBlockType,
+    InspectorControls,
 } = wp.blocks;
-const { withAPIData } = wp.components;
+const { ToggleControl, SelectControl } = InspectorControls;
+const { PanelBody } = wp.components;
 
 registerBlockType( 'give/donation-form-block', {
 
@@ -11,14 +13,79 @@ registerBlockType( 'give/donation-form-block', {
     category: 'common',
 
     attributes: {
-       id: {
+        id: {
            type: 'number'
-       }
+        },
+        formFormat: {
+            type: 'string'
+        },
+        formTitle: {
+            type: 'boolean',
+            default: false
+        },
+        formGoal: {
+            type: 'boolean',
+            default: false
+        },
+        formContent: {
+            type: 'boolean',
+            default: false
+        }
     },
 
     edit: props => {
 
         const attributes = props.attributes;
+
+        const formFormats = [
+            { value: 'full-form', label: 'Full Form' },
+            { value: 'modal', label: 'Modal' },
+            { value: 'reveal', label: 'Reveal' },
+            { value: 'one-button-launch', label: 'One-button Launch' }
+        ];
+
+        const toggleFormTitle = () => {
+            props.setAttributes( { formTitle: ! attributes.formTitle } );
+        };
+
+       const toggleFormGoal = () => {
+            props.setAttributes( { formGoal: ! attributes.formGoal } );
+        };
+
+       const toggleFormContent = () => {
+            props.setAttributes( { formContent: ! attributes.formContent } );
+        };
+
+        const inspectorControls = (
+            <InspectorControls key="inspector">
+                <h3>{ __( 'Donation Form Settings' ) }</h3>
+                <PanelBody title={ __( 'Presentation' ) }>
+                    <SelectControl
+                        label={ __( 'format' ) }
+                        value={ attributes.formFormat }
+                        options={ formFormats }
+                        onChange={ this.updateImageURL }
+                    />
+                </PanelBody>
+                <PanelBody title={ __( 'Form Components' ) }>
+                    <ToggleControl
+                        label={ __( 'Form Title' ) }
+                        checked={ !! attributes.formTitle }
+                        onChange={ toggleFormTitle }
+                    />
+                    <ToggleControl
+                        label={ __( 'Form Goal' ) }
+                        checked={ !! attributes.formGoal }
+                        onChange={ toggleFormGoal }
+                    />
+                    <ToggleControl
+                        label={ __( 'Form Content' ) }
+                        checked={ !! attributes.formContent }
+                        onChange={ toggleFormContent }
+                    />
+                </PanelBody>
+            </InspectorControls>
+        );
 
         if (!attributes.id && !attributes.forms) {
 
@@ -53,6 +120,13 @@ registerBlockType( 'give/donation-form-block', {
             setForm(event.target.value);
         };
 
+        const onChangeContent = newContent => {
+            props.setAttributes( { content: newContent } );
+        };
+
+        const onChangeAlignment = newAlignment => {
+            props.setAttributes( { alignment: newAlignment } );
+        };
 
         if (!attributes.id) {
 
@@ -76,9 +150,13 @@ registerBlockType( 'give/donation-form-block', {
             return "loading !";
         }
 
+
         return (
-            <div id={ `give-form-${attributes.id}`}>
-                <h2 class="give-form-title">{attributes.form.title}</h2>
+            <div>
+                { !!props.focus && inspectorControls }
+                <div id={ `give-form-${attributes.id}`}>
+                    <h2 class="give-form-title">{attributes.form.title}</h2>
+                </div>
             </div>
         );
     },
