@@ -64,13 +64,13 @@ registerBlockType( 'give/donation-form-block', {
             });
         };
 
-        const setFormIdTo = event => {
-            props.setAttributes({id: event.target.value});
-            loadFormData(event.target.value);
+        const setFormIdTo = id => {
+            props.setAttributes({id: id});
+            loadFormData(id);
         };
 
-        const setFormFormatTo = event => {
-            props.setAttributes({formFormat: event.target.value});
+        const setFormFormatTo = format => {
+            props.setAttributes({formFormat: format});
         };
 
         const toggleFormTitle = () => {
