@@ -47,6 +47,21 @@ function give_register_block_type() {
             'attributes' => array(
                 'id' => array(
                     'type' => 'number'
+                ),
+                'formFormat' => array (
+                    'type' => 'string'
+                ),
+                'formTitle' => array (
+                    'type' => 'boolean',
+                    'default' => false
+                ),
+                'formGoal' => array (
+                    'type' => 'boolean',
+                        'default' => false
+                ),
+                'formContent' => array (
+                    'type' => 'boolean',
+                    'default' => false
                 )
             )
         )

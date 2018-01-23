@@ -44,6 +44,35 @@ registerBlockType( 'give/donation-form-block', {
             { value: 'one-button-launch', label: 'One-button Launch' }
         ];
 
+        const loadFormData = id => {
+
+            window.fetch( `${wpApiSettings.schema.url}/wp-json/give-api/v1/form/${id}` ).then(
+                (response) => {
+                    response.json().then(  ( reply ) => {
+                        props.setAttributes( { form : reply } );
+                    } );
+                }
+            );
+        };
+
+        const getFormOptions = () => {
+            return attributes.forms.map((form) => {
+                return {
+                    value: form.info.id,
+                    label: form.info.title
+                }
+            });
+        };
+
+        const setFormIdTo = event => {
+            props.setAttributes({id: event.target.value});
+            loadFormData(event.target.value);
+        };
+
+        const setFormFormatTo = event => {
+            props.setAttributes({formFormat: event.target.value});
+        };
+
         const toggleFormTitle = () => {
             props.setAttributes( { formTitle: ! attributes.formTitle } );
         };
@@ -61,10 +90,10 @@ registerBlockType( 'give/donation-form-block', {
                 <h3>{ __( 'Donation Form Settings' ) }</h3>
                 <PanelBody title={ __( 'Presentation' ) }>
                     <SelectControl
-                        label={ __( 'format' ) }
+                        label={ __( 'Format' ) }
                         value={ attributes.formFormat }
                         options={ formFormats }
-                        onChange={ this.updateImageURL }
+                        onChange={ setFormFormatTo }
                     />
                 </PanelBody>
                 <PanelBody title={ __( 'Form Components' ) }>
@@ -104,52 +133,23 @@ registerBlockType( 'give/donation-form-block', {
             return "No forms";
         }
 
-        const setForm = id => {
-
-            window.fetch( `${wpApiSettings.schema.url}/wp-json/give-api/v1/form/${id}` ).then(
-                (response) => {
-                    response.json().then(  ( reply ) => {
-                        props.setAttributes( { form : reply } );
-                    } );
-                }
-            );
-        };
-
-        const onSelectChange = event => {
-            props.setAttributes({id: event.target.value});
-            setForm(event.target.value);
-        };
-
-        const onChangeContent = newContent => {
-            props.setAttributes( { content: newContent } );
-        };
-
-        const onChangeAlignment = newAlignment => {
-            props.setAttributes( { alignment: newAlignment } );
-        };
-
         if (!attributes.id) {
 
             return (
                 <div>
-                    <select onChange={onSelectChange}>
-                        {
-                            attributes.forms.map((form) => {
-                                return(
-                                    <option value={form.info.id}>{form.info.title}</option>
-                                )
-                            })
-                        }
-                    </select>
+                    <SelectControl
+                        label={ __( 'Give Donation Form' ) }
+                        options={ getFormOptions() }
+                        onChange={ setFormIdTo }
+                    />
                 </div>
             );
         }
 
         if ( !attributes.form ) {
-            setForm(attributes.id);
+            loadFormData(attributes.id);
             return "loading !";
         }
-
 
         return (
             <div>
