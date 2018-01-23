@@ -74,8 +74,7 @@ function give_register_block_type() {
  * @return string
  */
 function give_donation_form_block_render( $attributes ) {
-    $form_id = $attributes[ 'id' ];
-    return do_shortcode('[give_form id='.$form_id.']');
+    return do_shortcode('[give_form id="'.$attributes[ 'id' ].'"  show_title="'. var_export( $attributes[ 'formTitle' ], 1 ).'" show_goal="'. var_export( $attributes[ 'formGoal' ], 1 ) .'"  display_style="'. $attributes[ 'formFormat' ] .'" ]');
 }
 
 add_action( 'rest_api_init', 'give_gutenberg_register_rest_api' );

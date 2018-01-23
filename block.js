@@ -38,10 +38,10 @@ registerBlockType( 'give/donation-form-block', {
         const attributes = props.attributes;
 
         const formFormats = [
-            { value: 'full-form', label: 'Full Form' },
+            { value: 'onpage', label: 'Full Form' },
             { value: 'modal', label: 'Modal' },
             { value: 'reveal', label: 'Reveal' },
-            { value: 'one-button-launch', label: 'One-button Launch' }
+            { value: 'button', label: 'One-button Launch' }
         ];
 
         const loadFormData = id => {
