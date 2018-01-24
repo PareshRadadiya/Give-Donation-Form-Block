@@ -16,20 +16,24 @@ registerBlockType( 'give/donation-form-block', {
         id: {
            type: 'number'
         },
-        formFormat: {
+        displayStyle: {
             type: 'string'
         },
-        formTitle: {
+        showTitle: {
             type: 'boolean',
             default: false
         },
-        formGoal: {
+        showGoal: {
             type: 'boolean',
             default: false
         },
-        formContent: {
+        contentDisplay: {
             type: 'boolean',
             default: false
+        },
+        showContent: {
+            type: 'string',
+            default: 'none'
         }
     },
 
@@ -37,11 +41,16 @@ registerBlockType( 'give/donation-form-block', {
 
         const attributes = props.attributes;
 
-        const formFormats = [
+        const displayStyles = [
             { value: 'onpage', label: 'Full Form' },
             { value: 'modal', label: 'Modal' },
             { value: 'reveal', label: 'Reveal' },
             { value: 'button', label: 'One-button Launch' }
+        ];
+
+        const contentPosition = [
+            { value: 'above', label: 'Above' },
+            { value: 'below', label: 'Below' }
         ];
 
         const loadFormData = id => {
@@ -69,20 +78,24 @@ registerBlockType( 'give/donation-form-block', {
             loadFormData(id);
         };
 
-        const setFormFormatTo = format => {
-            props.setAttributes({formFormat: format});
+        const setDisplayStyleTo = format => {
+            props.setAttributes({displayStyle: format});
         };
 
-        const toggleFormTitle = () => {
-            props.setAttributes( { formTitle: ! attributes.formTitle } );
+        const toggleShowTitle = () => {
+            props.setAttributes( { showTitle: ! attributes.showTitle } );
         };
 
-       const toggleFormGoal = () => {
-            props.setAttributes( { formGoal: ! attributes.formGoal } );
+       const toggleShowGoal = () => {
+            props.setAttributes( { showGoal: ! attributes.showGoal } );
         };
 
-       const toggleFormContent = () => {
-            props.setAttributes( { formContent: ! attributes.formContent } );
+       const toggleContentDisplay = () => {
+            props.setAttributes( { contentDisplay: ! attributes.contentDisplay } );
+        };
+
+        const setShowContentPosition = position => {
+            props.setAttributes({showContent: position});
         };
 
         const inspectorControls = (
@@ -91,27 +104,37 @@ registerBlockType( 'give/donation-form-block', {
                 <PanelBody title={ __( 'Presentation' ) }>
                     <SelectControl
                         label={ __( 'Format' ) }
-                        value={ attributes.formFormat }
-                        options={ formFormats }
-                        onChange={ setFormFormatTo }
+                        value={ attributes.displayStyle }
+                        options={ displayStyles }
+                        onChange={ setDisplayStyleTo }
                     />
                 </PanelBody>
                 <PanelBody title={ __( 'Form Components' ) }>
                     <ToggleControl
                         label={ __( 'Form Title' ) }
-                        checked={ !! attributes.formTitle }
-                        onChange={ toggleFormTitle }
+                        checked={ !! attributes.showTitle }
+                        onChange={ toggleShowTitle }
                     />
                     <ToggleControl
                         label={ __( 'Form Goal' ) }
-                        checked={ !! attributes.formGoal }
-                        onChange={ toggleFormGoal }
+                        checked={ !! attributes.showGoal }
+                        onChange={ toggleShowGoal }
                     />
                     <ToggleControl
                         label={ __( 'Form Content' ) }
-                        checked={ !! attributes.formContent }
-                        onChange={ toggleFormContent }
+                        checked={ !! attributes.contentDisplay }
+                        onChange={ toggleContentDisplay }
                     />
+                    {
+                        attributes.contentDisplay && (
+                            <SelectControl
+                                label={ __( 'Content Position' ) }
+                                value={ attributes.showContent }
+                                options={ contentPosition }
+                                onChange={ setShowContentPosition }
+                            />
+                        )
+                    }
                 </PanelBody>
             </InspectorControls>
         );

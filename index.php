@@ -48,20 +48,19 @@ function give_register_block_type() {
                 'id' => array(
                     'type' => 'number'
                 ),
-                'formFormat' => array (
+                'displayStyle' => array (
                     'type' => 'string'
                 ),
-                'formTitle' => array (
+                'showTitle' => array (
                     'type' => 'boolean',
                     'default' => false
                 ),
-                'formGoal' => array (
+                'showGoal' => array (
                     'type' => 'boolean',
                         'default' => false
                 ),
-                'formContent' => array (
-                    'type' => 'boolean',
-                    'default' => false
+                'showContent' => array (
+                    'type' => 'string',
                 )
             )
         )
@@ -74,7 +73,7 @@ function give_register_block_type() {
  * @return string
  */
 function give_donation_form_block_render( $attributes ) {
-    return do_shortcode('[give_form id="'.$attributes[ 'id' ].'"  show_title="'. var_export( $attributes[ 'formTitle' ], 1 ).'" show_goal="'. var_export( $attributes[ 'formGoal' ], 1 ) .'"  display_style="'. $attributes[ 'formFormat' ] .'" ]');
+    return do_shortcode('[give_form id="'.$attributes[ 'id' ].'"  show_title="'. var_export( $attributes[ 'showTitle' ], 1 ).'" show_goal="'. var_export( $attributes[ 'showGoal' ], 1 ) .'"  display_style="'. $attributes[ 'displayStyle' ] .'" show_content="'. $attributes[ 'showContent' ] .'"]');
 }
 
 add_action( 'rest_api_init', 'give_gutenberg_register_rest_api' );
