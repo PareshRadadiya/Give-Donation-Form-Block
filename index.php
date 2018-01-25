@@ -51,6 +51,9 @@ function give_register_block_type() {
                 'displayStyle' => array (
                     'type' => 'string'
                 ),
+                'continueButtonTitle' => array(
+                    'type' => 'string'
+                ),
                 'showTitle' => array (
                     'type' => 'boolean',
                     'default' => false
@@ -74,7 +77,21 @@ function give_register_block_type() {
  * @return string
  */
 function give_donation_form_block_render( $attributes ) {
-    return do_shortcode('[give_form id="'.$attributes[ 'id' ].'"  show_title="'. var_export( $attributes[ 'showTitle' ], 1 ).'" show_goal="'. var_export( $attributes[ 'showGoal' ], 1 ) .'"  display_style="'. $attributes[ 'displayStyle' ] .'" show_content="'. $attributes[ 'showContent' ] .'"]');
+
+   if ( empty( $attributes['id'] ) )
+       return;
+
+   $parameters = array();
+
+   $parameters[] = 'id="'. $attributes[ 'id' ]. '"';
+   $parameters[] = 'show_title="'. var_export( $attributes[ 'showTitle' ], 1 ) . '"';
+   $parameters[] = 'show_goal="'. var_export( $attributes[ 'showGoal' ], 1 ) . '"';
+   $parameters[] = 'show_content="'. $attributes[ 'showContent' ] . '"';
+   $parameters[] = 'display_style="'. $attributes[ 'displayStyle' ] . '"';
+   'reveal' === $attributes[ 'displayStyle' ] && // show continue button if display_style is "reveal"
+   $parameters[] = 'continue_button_title="'. trim( $attributes[ 'continueButtonTitle' ] ). '"';
+
+    return do_shortcode('[give_form '. join(' ', $parameters ) .' ]');
 }
 
 add_action( 'rest_api_init', 'give_gutenberg_register_rest_api' );

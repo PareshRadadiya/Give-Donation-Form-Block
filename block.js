@@ -3,7 +3,11 @@ const {
     registerBlockType,
     InspectorControls,
 } = wp.blocks;
-const { ToggleControl, SelectControl } = InspectorControls;
+const {
+    ToggleControl,
+    SelectControl,
+    TextControl
+} = InspectorControls;
 const { PanelBody } = wp.components;
 
 registerBlockType( 'give/donation-form-block', {
@@ -17,6 +21,9 @@ registerBlockType( 'give/donation-form-block', {
            type: 'number'
         },
         displayStyle: {
+            type: 'string'
+        },
+        continueButtonTitle: {
             type: 'string'
         },
         showTitle: {
@@ -82,6 +89,10 @@ registerBlockType( 'give/donation-form-block', {
             props.setAttributes( { displayStyle: format } );
         };
 
+        const setContinueButtonTitle = buttonTitle => {
+            props.setAttributes( { continueButtonTitle: buttonTitle } );
+        };
+
         const toggleShowTitle = () => {
             props.setAttributes( { showTitle: ! attributes.showTitle } );
         };
@@ -112,6 +123,15 @@ registerBlockType( 'give/donation-form-block', {
                         options={ displayStyles }
                         onChange={ setDisplayStyleTo }
                     />
+                    {
+                        'reveal' === attributes.displayStyle && (
+                            <TextControl
+                                label={ __( 'Continue Button Title' ) }
+                                value={ attributes.continueButtonTitle }
+                                onChange={ setContinueButtonTitle }
+                            />
+                        )
+                    }
                 </PanelBody>
                 <PanelBody title={ __( 'Form Components' ) }>
                     <ToggleControl
