@@ -56,7 +56,7 @@ registerBlockType( 'give/donation-form-block', {
         const loadFormData = id => {
 
             window.fetch( `${wpApiSettings.schema.url}/wp-json/give-api/v1/form/${id}` ).then(
-                (response) => {
+                ( response ) => {
                     response.json().then(  ( reply ) => {
                         props.setAttributes( { form : reply } );
                     } );
@@ -65,7 +65,7 @@ registerBlockType( 'give/donation-form-block', {
         };
 
         const getFormOptions = () => {
-            return attributes.forms.map((form) => {
+            return attributes.forms.map( ( form ) => {
                 return {
                     value: form.info.id,
                     label: form.info.title
@@ -74,12 +74,12 @@ registerBlockType( 'give/donation-form-block', {
         };
 
         const setFormIdTo = id => {
-            props.setAttributes({id: id});
+            props.setAttributes( { id: id } );
             loadFormData(id);
         };
 
         const setDisplayStyleTo = format => {
-            props.setAttributes({displayStyle: format});
+            props.setAttributes( { displayStyle: format } );
         };
 
         const toggleShowTitle = () => {
@@ -92,10 +92,14 @@ registerBlockType( 'give/donation-form-block', {
 
        const toggleContentDisplay = () => {
             props.setAttributes( { contentDisplay: ! attributes.contentDisplay } );
+
+            // Set form Content Display Position
+           !  attributes.contentDisplay && props.setAttributes( { showContent: 'above' } ); // true && above
+           !! attributes.contentDisplay && props.setAttributes( { showContent: 'none' } );  // false && none
         };
 
         const setShowContentPosition = position => {
-            props.setAttributes({showContent: position});
+            props.setAttributes( { showContent: position } );
         };
 
         const inspectorControls = (
@@ -139,10 +143,10 @@ registerBlockType( 'give/donation-form-block', {
             </InspectorControls>
         );
 
-        if (!attributes.id && !attributes.forms) {
+        if ( ! attributes.id && ! attributes.forms ) {
 
             window.fetch( `${wpApiSettings.schema.url}/give-api/forms/?key=${giveBlocksVars.key}&token=${giveBlocksVars.token}` ).then(
-                (response) => {
+                ( response ) => {
                     response.json().then(  ( reply ) => {
                         props.setAttributes( { forms : reply.forms } );
                     } );
@@ -152,7 +156,7 @@ registerBlockType( 'give/donation-form-block', {
             return "loading !";
         }
 
-        if (!attributes.id && attributes.forms.length === 0) {
+        if ( ! attributes.id && attributes.forms.length === 0 ) {
             return "No forms";
         }
 
@@ -169,14 +173,14 @@ registerBlockType( 'give/donation-form-block', {
             );
         }
 
-        if ( !attributes.form ) {
-            loadFormData(attributes.id);
+        if ( ! attributes.form ) {
+            loadFormData( attributes.id );
             return "loading !";
         }
 
         return (
             <div>
-                { !!props.focus && inspectorControls }
+                { !! props.focus && inspectorControls }
                 <div id={ `give-form-${attributes.id}`}>
                     <h2 class="give-form-title">{attributes.form.title}</h2>
                 </div>

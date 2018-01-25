@@ -57,10 +57,11 @@ function give_register_block_type() {
                 ),
                 'showGoal' => array (
                     'type' => 'boolean',
-                        'default' => false
+                    'default' => false
                 ),
                 'showContent' => array (
                     'type' => 'string',
+                    'default' => 'none'
                 )
             )
         )
